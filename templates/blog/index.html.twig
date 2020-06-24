@@ -1,39 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Blog Symfony | Articles {% endblock %}
-
+{% block title %}Blog Symfony | Articles{% endblock %}
 
 {% block body %}
- 
-    <h1 class="display-4 text-center my-4 ">Liste des articles</h1>
+
+    <h1 class="display-4 text-center my-4">Liste des articles</h1>
 
     <div class="row d-flex justify-content-around">
+      {# for est une boucle / commande de TWIG, ici nous avons receptionné 10 articles de la BDD donc nous devons passer en revue ces 10 articles via la boucle FOR #}
+      {# la variable 'articles' provient du controller 'BlogController' et de la méthode 'index()' ($this->render(['articles'])), elle contient les 10 articles selectionnés en BDD#} 
+      {# data est une variable de reception qui receptionne un article par tout de boucle#}
+      {# ex: 1er tour : article n°1 #}
+      {# ex: 2er tour : article n°2 etc... #}
+      {% for data in articles %}
 
-        <div class="card mb-2 text-center" style="width: 18rem;">
-            <img src="https://picsum.photos/seed/picsum/200" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="{{ path('blog_show')}} " class="btn btn-primary">Go somewhere</a>
+    
+            <div class="card mb-2 text-center" style="width: 18rem;">
+                <img src="{{ data.image }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{ data.title }}</h5>
+                    <p class="card-text">{{ data.content|raw}} </p>
+                    {# row : filtre TWIG qui permet d'echapper les balises HTML stockées en BDD et d'afficher le texte brut#}
+                    <hr>
+                    <p class="card-text">Posté le {{ data.createdAt|date("d/m/Y") }} à {{ data.createdAt | date("H:i:s") }} </p>
+                    <a href="{{ path('blog_show', {'id': data.id }) }}" class="btn btn-dark">Go somewhere</a>
+                    {# path('blog_show') : nom de la route pour le détail d'un article définit dans la méthode show() du controller 'BlogController' #}
+                    {# La toute 'blog_show' permet de voir le detail d'un article et cette route attend un paramètre de tupe 'id' dans l'URL donc il faut founir en 2ème argument de la méthode path() l'id de l'article #}
+                  </div>
             </div>
-          </div>
-
-          <div class="card mb-2 text-center" style="width: 18rem;">
-            <img src="https://picsum.photos/seed/picsum/200" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="{{ path('blog_show')}}" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
-
-          <div class="card mb-2 text-center" style="width: 18rem;">
-            <img src="https://picsum.photos/seed/picsum/200" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="{{ path('blog_show')}}" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
+          
+        {% endfor %}
+    
     </div>
+
 {% endblock %}

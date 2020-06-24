@@ -5,13 +5,13 @@
 <h1 class="display-4 text-center my-4">Detail de l'article</h1>
 
 
-<div class="col-md-12 mb-2  p-0">
-    <img src="https://picsum.photos/seed/picsum/300/150" class="card-img-top" alt="...">
+<div class="text-center col-md-12 mb-2  p-0">
+    <img src="{{ article.image|replace({"200": "1000/300"}) }}" class="card-img-top" alt="{{ article.title }}">
     <div class="card-body">
-      <h5 class="card-title text-center">Card title</h5>
-      <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-          Commodi, officiis ad non numquam a itaque repellat eum labore dicta quasi, officia earum facere dignissimos. 
-          Ducimus quidem assumenda laudantium animi quis.</p>
+      <h5 class="card-title">{{ article.title }}</h5>
+      <p class="card-text ">{{ article.content|raw }} </p>
+      <hr>
+      <p>{{ article. createdAt|date("d/m/Y") }} à {{ article.createdAt|date("H:i:s") }}</p>
     </div>
   </div>
 
