@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BlogController extends AbstractController
@@ -54,12 +57,101 @@ class BlogController extends AbstractController
         ]);
     }
 
+    // create() : méthode permettant d'insérer un nouvle article en BDD
+
      /**
      * @Route("/blog/new", name="blog_create")
+     * @Route("/blog/{id}/edit", name="blog_edit")
      */
-    public function create()
+    public function create(Article $article = null,Request $request , EntityManagerInterface $manager)
     {
-        return $this->render('blog/create.html.twig');
+        /*
+            La class Request est une clasee prédéfinie en Symfony qui stocke toute les données véhiculées par les superglobales
+            ($_POST, $COOKIE, $_SERVER ect...)
+            Nous avons accès aux données saisie dans le fourmulaire via l'objet $request
+            La proprité 'request->request' représente la superglobale $_POST, les données saisies dans le formulaire sont accessible
+            via cette proprité
+            pour insérer un nouvel article , nous devons instancier la classe / Entitée Article pour avoir un objet Article vide , afon de 
+            renseigner tout les setteursde l'objet $article
+
+            EntityManagerInterface est une interface prédefinie en Symnfony qui permet de manipulier les lignes de la BDD(INSET,UPDATE,DELETE)
+            Elle possède des méthodes permettant de péparer et d'executer les requetes SQL (persist() | flush ())
+
+            persist() est une méthode issue de l'interface EntityManagerInterface qui permet de préparer et sticker la requete SQL
+            flush() est une méthode issue de l'interface EntityManagerInterface qui permet de libérer eet d'executer la requete SQL
+
+            redirectToRoute() est une méthode prédéfinie en Symfony qui permet de rediriger vers une route spécifique, dans notre 
+            cqs on redirige après insertion vers la routr 'blog_show' (détail de l'article que l'on vient d'insérer) et on transmet à la 
+            méthode l'id de l'article a envoyer dans l'URL
+
+            get(): méthode del'objet $request qui permet de récupérer les donnéés saisie aux différents indicces 'name' du formulaire
+       
+        */
+
+
+
+        
+        //dump($request)
+
+        //if($request->request->count() > 0)
+       // {
+            //$article = new Article;
+
+        //   $article->setTitle($request->request->get('title'))
+          //          ->setContent($request->request->get('content'))
+           //         ->setImage($request->request->get('image'))
+            //        ->setCreatedAt(new \DateTime());
+       //
+
+         //   $manager->persist($article);
+
+         //   $manager->flush();
+
+          //  dump($article);
+
+        //    return $this->redirectToRoute('blog_show',[
+         //       'id' => $article->getId()
+        //    ]);
+
+       // }
+
+
+       if(!$article)
+       {
+           $article =  new Article;
+       }
+    
+
+    //    $article->setTitle("Titre à la con")
+    //            ->setContent("Contenu à la con");
+
+       $form = $this->createFormBuilder($article)
+                    ->add('title')
+                    ->add('content')
+                    ->add('image')
+                    ->getForm();
+
+        $form->handleRequest($request);
+        
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $article->setCreatedAt(new \DateTime);
+
+            $manager->persist($article);
+            $manager->flush();
+
+            dump($article);
+
+            return $this->redirectToRoute('blog_show',[
+                    'id' => $article->getId()
+                ]);
+        }
+
+        return $this->render('blog/create.html.twig',[
+            'formArticle' =>$form->createView()
+        ]);
+
+
     }
 
 
@@ -67,7 +159,7 @@ class BlogController extends AbstractController
 
     /**
      * @Route("/blog/{id}", name="blog_show" )
-     */
+    */
     public function show($id) // id 1 
     {
         /* show()    c'est une variable de reception que nous sommes à souhaite et quireception un objet issu de la classe ArticleRepository*/
