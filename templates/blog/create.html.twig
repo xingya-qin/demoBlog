@@ -3,7 +3,20 @@
 
 {% block body %}
 
-<h1 class="display-4 text-center my-4">Créer un nouvel article</h1>
+<h1 class="display-4 text-center my-4">
+
+  {#  editMode : variable TWIG qui provient du controller 'BlogContriller' de la méthode 'form()',elle permet de savoir si un 
+    un article possède un ID ou non, cela permet de gérer l'affichage ne fonction de l'action (ajout/modification)
+  #}
+  {# Si la condition IF revoie TRUE, cela veut dire que l'article possède un ID, alors c'est une modifiction #}
+  {# Sinon dans tout #}
+
+  {% if editMode %}
+      Modification de l'article
+  {% else %}
+    Créer un nouvel article
+  {% endif %}  
+</h1>
 
   {# form_start() fonction de TWIG permettant de commencer le formulaire, de générer la balise <form> ouvrante, Symfony intègre automatiquement l'attribut 'method="post"' #}
   {# form_end() fonction de TWIG permettant de terminer le formulaire, de générer la balise </form> fermante #}
@@ -20,7 +33,17 @@
 
   {{ form_row(formArticle.image, {'attr':{'placeholder': "Saisir l'URL de l'image..."}}) }}
 
-  <button type="submit" class="btn btn-info">Enregistrer</button>
+  <button type="submit" class="btn btn-info">
+    {% if editMode %}
+      Enregistrer les modifications
+    {% else %}
+      Enregistrer
+    {% endif %}
+     
+
+
+
+  </button>
 
 
 {{ form_end(formArticle) }}
