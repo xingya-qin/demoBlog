@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Form\ArticleType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -63,7 +64,7 @@ class BlogController extends AbstractController
      * @Route("/blog/new", name="blog_create")
      * @Route("/blog/{id}/edit", name="blog_edit")
      */
-    public function create(Article $article = null,Request $request , EntityManagerInterface $manager)
+    public function form(Article $article = null,Request $request , EntityManagerInterface $manager)
     {
         /*
             La class Request est une clasee prédéfinie en Symfony qui stocke toute les données véhiculées par les superglobales
@@ -115,27 +116,45 @@ class BlogController extends AbstractController
 
        // }
 
-
-       if(!$article)
+        // Si l'article n'est pas existant , n'est pas définit, qu'il est NULL, cela veut dire qu'aucun ID n'a été transimi dans l'URL,
+        // donc c'est une insertion, alors on insitance la classe Article afin d'aoir un objet $article vide .
+        //on entre dans la condition seulment dans le cqs d'une insertion d'un nouvel article      
+        
+        
+        if(!$article)
        {
            $article =  new Article;
        }
+
+       //On importr la classe permettant de vréer le fornumaire d'ajout/ modification d'article (ArticleType)
+       // On envoi en 2ème argument l'objet $article pour bien spécifier que le formulaire est destiné à remplir l'objet $article
+       $form = $this->createForm(ArticleType::class, $article);
     
 
     //    $article->setTitle("Titre à la con")
     //            ->setContent("Contenu à la con");
 
-       $form = $this->createFormBuilder($article)
-                    ->add('title')
-                    ->add('content')
-                    ->add('image')
-                    ->getForm();
+    //    $form = $this->createFormBuilder($article)
+    //                 ->add('title')
+    //                 ->add('content')
+    //                 ->add('image')
+    //                 ->getForm();
 
+
+    // La méthode handleRequest() permet de récupérer toute les valeurs du formulaire contenu dans $request($_POST) afin de 
+    // les envoyer directement dans les setteurs de l'objet $article
         $form->handleRequest($request);
-        
+    
+    // Si le fourmulaire a bien été soumis , que l'on a clqué sur la button de validation 'submit'  et que tout est bien validé,c'est
+    // à dire que chaque   
         if($form->isSubmitted() && $form->isValid())
         {
-            $article->setCreatedAt(new \DateTime);
+            if(!$article->getId()){
+
+                $article->setCreatedAt(new \DateTime);
+
+            }
+            
 
             $manager->persist($article);
             $manager->flush();
@@ -148,7 +167,10 @@ class BlogController extends AbstractController
         }
 
         return $this->render('blog/create.html.twig',[
-            'formArticle' =>$form->createView()
+            'formArticle' =>$form->createView(),
+            'editMode' =>$article->getId() !== null  // On est si l'article possède un ID ou non,si l'article possède un ID
+            // c'est une modofication, si il n'a pas d'ID C?EST UNE INSERTION
+
         ]);
 
 
