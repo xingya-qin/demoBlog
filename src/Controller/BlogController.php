@@ -169,7 +169,7 @@ class BlogController extends AbstractController
         return $this->render('blog/create.html.twig',[
             'formArticle' =>$form->createView(),
             'editMode' =>$article->getId() !== null  // On est si l'article possède un ID ou non,si l'article possède un ID
-            // c'est une modofication, si il n'a pas d'ID C?EST UNE INSERTION
+            // c'est une modofication, si il n'a pas d'ID c'est une insertion.
 
         ]);
 
