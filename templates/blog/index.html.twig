@@ -19,10 +19,11 @@
                 <img src="{{ data.image }}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{ data.title }}</h5>
-                    <p class="card-text">{{ data.content|raw}} </p>
+                    <p class="card-text">{{ data.content|slice(0,100)|raw}}...</p>
+                    {# slice() : fonction TWIG qui retourne une parite de la chaine de cractètere #}
                     {# row : filtre TWIG qui permet d'echapper les balises HTML stockées en BDD et d'afficher le texte brut#}
                     <hr>
-                    <p class="card-text">Posté le {{ data.createdAt|date("d/m/Y") }} à {{ data.createdAt | date("H:i:s") }} </p>
+                    <p class="card-text">Posté le {{ data.createdAt|date("d/m/Y") }} à {{ data.createdAt | date("H:i:s") }} dans le cetégorie <strong>{{ data.category.tittle }}</strong></p>
                     <a href="{{ path('blog_show', {'id': data.id }) }}" class="btn btn-dark">Go somewhere</a>
                     {# path('blog_show') : nom de la route pour le détail d'un article définit dans la méthode show() du controller 'BlogController' #}
                     {# La toute 'blog_show' permet de voir le detail d'un article et cette route attend un paramètre de tupe 'id' dans l'URL donc il faut founir en 2ème argument de la méthode path() l'id de l'article #}
