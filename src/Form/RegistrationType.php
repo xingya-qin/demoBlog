@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,8 +15,9 @@ class RegistrationType extends AbstractType
         $builder
             ->add('email')
             ->add('username')
-            ->add('password')
-            ->add('confirm_password') // on ajoute un champ afin de confirmer le mot de passe, ce champ ne sera pas inséré en BDD
+            ->add('password', PasswordType::class) // on apple la class PasswordType afin d'avoir des champs du formulaire de type 
+            // "password" pour masquer les mots de passe à la saisie du formulaire 
+            ->add('confirm_password', PasswordType::class) // on ajoute un champ afin de confirmer le mot de passe, ce champ ne sera pas inséré en BDD
         ;
     }
 

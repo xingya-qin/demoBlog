@@ -29,6 +29,8 @@
 
   {{ form_row(formArticle.title, {'attr':{'placeholder': "Saisir le titre de l\'article"}}) }}
 
+  {{ form_row(formArticle.category) }}
+
   {{ form_row(formArticle.content, {'attr':{'placeholder': "Contenu le titre de l'article....","rows":10}}) }}
 
   {{ form_row(formArticle.image, {'attr':{'placeholder': "Saisir l'URL de l'image..."}}) }}

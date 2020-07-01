@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Back office | Getion des articles{% endblock %}
+
+{% block body %}
+
+<h1 class="display-4 text-center my-4">GESION DES ARTICLES</h1>
+
+<table class="table table-bordered text-center">
+    <tr>
+        {# On boucle sur les colonnes recupérer eb BDD et envoyé par le controller  'AdminiController' #}
+        {# 'colonnes' -> variables contenat les noms des colonnes de table 'Article' qui provient du controller 'AdminController'#}
+        {# 'data' recetio#}
+        {% for data in colonnes %}
+            {% if data !='id' %}
+
+                <th>{{ data }}</th>
+
+            {% endif %}
+            
+        {% endfor %}
+    </tr>
+
+    {% for data in articles %}
+
+        <tr>
+            <td>{{ data.title}}</td>
+            <td>{{ data.content|raw }}</td>
+            <td><img src="{{ data.image }}" alt="{{ data.title }}" style="width: 150px;"></td>
+            <td>{{ data.createdAt|date("d/m/Y à H:i:s") }}</td>
+            <td>{{ data.category.tittle }}</td>
+            <td><a href="{{ path('admin_edit_article', {'id': data.id }) }}" class="btn btndark"><i class="far fa-edit"></i></a></td>
+            <td><a href=""class="btn danger"><i class="fas fa-trash-alt"></i></a></td>
+        </tr>
+    
+    {% endfor %}
+</table>
+
+
+{% endblock %}
