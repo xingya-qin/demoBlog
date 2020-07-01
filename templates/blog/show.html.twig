@@ -11,8 +11,14 @@
       <h5 class="card-title">{{ article.title }}</h5>
       <p class="card-text ">{{ article.content|raw }} </p>
       <hr>
-      <span class="col-md-2"><a href="{{ path('blog_edit', {'id': article.id})}}" class="text-left btn btn-info">Motifier</a></span>
-      <span>Posté le{{ article. createdAt|date("d/m/Y") }} à {{ article.createdAt|date("H:i:s") }} dans la catégorie <strong>{{ article.category.tittle}}</strong></span>
+
+      {% if app.user %}
+
+        <span class="col-md-2"><a href="{{ path('blog_edit', {'id': article.id})}}" class="text-left btn btn-info">Motifier</a></span>
+      
+      {% endif %}
+      
+      <span>Posté le {{ article. createdAt|date("d/m/Y") }} à {{ article.createdAt|date("H:i:s") }} dans la catégorie <strong>{{ article.category.tittle}}</strong></span>
     </div>
 
     <h2 class="text-center mt-5">Derniers avis...</h2>
