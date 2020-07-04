@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Form\ArticleType;
+use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +23,7 @@ class BlogController extends AbstractController
     /**
      * @Route("/blog", name="blog")
      */
-    public function index()
+    public function index(ArticleRepository $repo)
     {
        /*
         Un des prin pes de principe de base de Symfony est l'injection de dépendances.
@@ -34,7 +35,7 @@ class BlogController extends AbstractController
         */     
 
        
-        $repo = $this->getDoctrine()->getRepository(Article::class);
+        //$repo = $this->getDoctrine()->getRepository(Article::class);
 
         $articles = $repo->findAll(); //équivalent à SELECT * FROM Article + FETCH_ALL
 
@@ -92,7 +93,7 @@ class BlogController extends AbstractController
 
 
         
-        //dump($request)
+        dump($request);
 
         //if($request->request->count() > 0)
        // {
@@ -167,8 +168,8 @@ class BlogController extends AbstractController
         }
 
         return $this->render('blog/create.html.twig',[
-            'formArticle' =>$form->createView(),
-            'editMode' =>$article->getId() !== null  // On est si l'article possède un ID ou non,si l'article possède un ID
+            'formArticle' => $form->createView(),
+            'editMode' => $article->getId() !== null  // On est si l'article possède un ID ou non,si l'article possède un ID
             // c'est une modofication, si il n'a pas d'ID c'est une insertion.
 
         ]);
@@ -182,17 +183,17 @@ class BlogController extends AbstractController
     /**
      * @Route("/blog/{id}", name="blog_show" )
     */
-    public function show($id) // id 1 
+    public function show(ArticleRepository $repo, $id) // id 1 
     {
         /* show()    c'est une variable de reception que nous sommes à souhaite et quireception un objet issu de la classe ArticleRepository*/
-        $repo = $this->getDoctrine()->getRepository(Article::class);
+       // $repo = $this->getDoctrine()->getRepository(Article::class);
 
         $article = $repo->find($id);
 
         dump($article);
 
         return $this->render('blog/show.html.twig',[
-            'article' =>$article
+            'article' => $article
         ]);
     }
 

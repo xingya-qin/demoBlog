@@ -1,47 +1,40 @@
 security:
 
-    # declarations de l'encodeur, on ptécise à Symfony que nous allons encoder un paramètre dans la classe / Entité User(password)
-    #on précise le type d'encodage (bcrypt)
+    # Bcrypt uses the blowfish encryption algorithm published by Bruce Schneier in 1993.
+    # The bcrypt function is the default password hash algorithm for OpenBSD
     encoders:
-        App\Entity\User:
+         App\Entity\User:
             algorithm: bcrypt
+
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         users_in_memory: { memory: null }
 
-        # on indique à Symfony ou sont stokée les données de l'utilisateur,en BDD(in_dadabase), de quelle entité(APP\Entity\User) et
-        # qullee propriété il va devoir controller (email)
         in_database:
             entity:
-                class: APP\Entity\User
-                property: email
-        # firewalls : quelle partie du site nous allons protéger et par quel moyen ?
-
-
+                class: App\Entity\User
+                property: email 
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        # main : tout le contenu du site    
         main:
             anonymous: true
             lazy: true
-
             provider: in_database
 
-            form_login:
+            form_login: 
                 login_path: security_login
-                check_path: security_login 
+                check_path: security_login
 
             logout:
                 path: security_logout
                 target: blog
-                # une fois deconnecter, cela redirige automatiquement vers la page des articles
-    # on indique à Syfony que les utilisateus ayant un ROLE_ADMIN, donc les administrateurs du site ont a aussi un ROLE_USER, ils ont
-    #dons accès à l'ensemble du site BACK + FRONT
+
+    #  Informing Symfony that the Role Admin is also a Role User, has access to the overall site FronEnd + BackOffice.          
     role_hierarchy:
-        ROLE_ADMIN: ROLE_USER
+        ROLE_ADMIN: ROLE_USER            
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -51,9 +44,9 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
-    # on indique à Symfony que seulement les ROL_Admin en BDD ont accès 
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
-    # si un utilisater ROLE_USER tente d'accéder au backoffice, on le redirige automatiquement 
-    access_denied_url: /blog    
+
+    # Incase the User tries to access the admin (Backoffice) page, it will redirect to the route /blog page where the list of articles are displayed!
+    access_denied_url: /blog

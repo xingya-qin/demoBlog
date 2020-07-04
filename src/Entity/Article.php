@@ -45,6 +45,12 @@ class Article
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(
+     *       min = 30,
+     *       max = 200,
+     *       minMessage ="Le Contenu est trop court",
+     *       maxMessage ="Le Contenu est trop long"
+     * )
      */
     private $content;
 
