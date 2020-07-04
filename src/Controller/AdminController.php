@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Article;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,9 +30,9 @@ class AdminController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         // getClassMetadata() permet de recolter les métadonnées d'une table SQL (noms des champs, type de champs) à 
-        $colonnes = $em->getClassMatadata(Article::class)->getFieldNames();
+        $colonnes = $em->getClassMetadata(Article::class)->getFieldNames();
 
-        $artcles = $repo->findAll();
+        $articles = $repo->findAll();
 
         dump($articles);
         dump($colonnes);
@@ -43,12 +44,14 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/{id}/edit_article", name="admin_edit_article")
+     * @Route("/admin/{id}/edit-article", name="admin_edit_article")
      */
     public function editArticles(Article $article)
     {
         dump($article);
         $form = $this->createForm(ArticleType::class, $article);
-        return $this->render('admin/edit_article.html.twig');
+        return $this->render('admin/edit_article.html.twig',[
+            'formEdit' => $form->createView()
+        ]);
     }
 }

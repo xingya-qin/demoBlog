@@ -57,13 +57,13 @@ class SecurityController extends AbstractController
     /**
      * @Route("/connexion", name="security_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationutils): Response
     {
-        $error = $authenticationUtils->getLastAuthenticationError();
+        $error = $authenticationutils->getLastAuthenticationError();
 
         // permet de recupérer le dernier username (email) que l'internaute a saisie dans le formulaire de connexion en cas d'errerur de
         //   conexion
-        $lastUsername = $authenticationUtils->getLastUsername();
+        $lastUsername = $authenticationutils->getLastUsername();
 
         return $this->render('security/login.html.twig',[
             'last_username' => $lastUsername, // on envoi le message d'erreur et le dernier email saisie sur le template
